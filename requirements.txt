@@ -1,0 +1,4 @@
+KSockets>=1.0.1
+pyinstaller
+termcolor
+loguru
