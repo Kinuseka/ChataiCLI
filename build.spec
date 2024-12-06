@@ -6,7 +6,7 @@ fua_data = collect_data_files('fake_useragent', include_py_files=False)
 datas = [
             ('./resources/app_icon_raw.jpg', 'resources/'),
             ('./resources/app_icon.ico', 'resources/'),
-            ('./cert/certificate_file.crt', 'cert/')
+            ('./cert/certificate_file.crt', 'cert/'),
             ('./shipping_config.json', '.')
         ]
 datas.extend(fua_data)
