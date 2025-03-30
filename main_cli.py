@@ -44,6 +44,10 @@ def load_config():
             print(colored("Config is INVALID", "red"))
             return 0
         
+def save_data(data):
+    with open("History.json", "w") as f:
+        f.write(data["data"])
+        
 def main(client: Client_Handler):
     data = client.metadata['data']
     print(colored("====", "blue"))
@@ -61,6 +65,14 @@ def main(client: Client_Handler):
         elif read(received, "ready"):
             print("AI ready for prompt")
             continue
+        elif read(received, "cmdNull"):
+            print("Command not found")
+            continue
+        elif read(received, "save"):
+            save_data(received)
+            print("Saved history")
+            client.consume_data() #consume ready
+            continue
         else:
             print("[Error] Remote returned invalid message")
             continue
@@ -74,12 +86,13 @@ if __name__ == "__main__":
             print("==Closing in 5 seconds==")
             time.sleep(5)
             sys.exit()
-        print("Chatai (CLI) V1.0")
-        print("IP: %s\nPORT: %s" % (IP, PORT))
+        print("Chatai (CLI) V1.1")
+        print("HOST: %s\nPORT: %s" % (IP, PORT))
         client = SimpleClient((IP,PORT))
-        client = wrap_secure(SimpleClient((IP, PORT)), certpath=resource_path("cert/certificate_file.crt"))
+        client = wrap_secure(SimpleClient((IP, PORT)), verify=False)
         client.connect()
         name = input(f"Enter name ({DEFAULT_NAME}): ") or DEFAULT_NAME
+        print(f"Set name to: {name}")
         custom_handler = Client_Handler(client, auth=UPASS,name=name)
         if custom_handler.metadata: #As per protocol, No metadata means rejected
             custom_handler.start()
